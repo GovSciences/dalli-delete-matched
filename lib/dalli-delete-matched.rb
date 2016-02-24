@@ -3,7 +3,7 @@ require 'active_support/core_ext/module/aliasing'
 
 ActiveSupport::Cache::DalliStore.class_eval do
 
-  CACHE_KEYS = "CacheKeys"
+  CACHE_KEYS = 'MemcachedCacheKeys'
 
   alias_method :old_write_entry, :write_entry
   def write_entry(key, entry, options)
@@ -22,7 +22,7 @@ ActiveSupport::Cache::DalliStore.class_eval do
     return false unless ret
     keys = get_cache_keys
     if keys.include?(key)
-      keys -= [ key ]
+      keys -= [key]
       delete CACHE_KEYS
       with { |c| write_cache_keys(keys, c) }
     end
@@ -46,7 +46,7 @@ ActiveSupport::Cache::DalliStore.class_eval do
     ret
   end
 
-private
+  private
 
   def write_cache_keys(keys, connection)
     old_write_entry(CACHE_KEYS, keys.to_yaml, { :connection => connection })
